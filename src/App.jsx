@@ -15,6 +15,7 @@ import leaderboard1 from "./assets/screenshots/leaderboard1.jpeg";
 import leaderboard2 from "./assets/screenshots/leaderboard2.jpeg";
 import bucktracker3 from "./assets/screenshots/bucktracker3.jpeg";
 import bucktracker4 from "./assets/screenshots/bucktracker4.jpeg";
+import { FaInstagram, FaTiktok } from "react-icons/fa";
 
 const GOLD = "#D4A017";
 const GOLD_LIGHT = "#F5D68D";
@@ -1459,7 +1460,7 @@ function Hero() {
               target="_blank"
               rel="noreferrer"
             >
-              IG
+              <FaInstagram />
             </a>
 
             <a
@@ -1468,7 +1469,7 @@ function Hero() {
               target="_blank"
               rel="noreferrer"
             >
-              TT
+              <FaTiktok />
             </a>
           </div>
 
