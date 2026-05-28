@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import huntmaps from "./assets/screenshots/huntmaps.PNG";
 import heroVideo from "./assets/video/hero.mp4";
 import racklogLogo from "./assets/images/racklog-logo2.png";
@@ -167,6 +168,8 @@ const story = [
 ];
 
 export default function App() {
+  useRackLogHead();
+
   return (
     <main className="racklog-page">
       <video className="site-bg-video" autoPlay muted loop playsInline>
@@ -191,6 +194,103 @@ export default function App() {
     </main>
   );
 }
+
+
+function useRackLogHead() {
+  useEffect(() => {
+    const title = "RackLog | Whitetail Hunting Intelligence";
+    const description =
+      "RackLog brings HuntMaps, wind and thermal tools, Buck Brain prediction modeling, Rack Intel, verified leaderboards, trophy cards, hunt logs, and target buck history into one premium whitetail platform.";
+
+    document.title = title;
+
+    const upsertMeta = (selector, attrs) => {
+      let tag = document.head.querySelector(selector);
+      if (!tag) {
+        tag = document.createElement("meta");
+        document.head.appendChild(tag);
+      }
+
+      Object.entries(attrs).forEach(([key, value]) => {
+        tag.setAttribute(key, value);
+      });
+    };
+
+    const upsertLink = (selector, attrs) => {
+      let tag = document.head.querySelector(selector);
+      if (!tag) {
+        tag = document.createElement("link");
+        document.head.appendChild(tag);
+      }
+
+      Object.entries(attrs).forEach(([key, value]) => {
+        tag.setAttribute(key, value);
+      });
+    };
+
+    upsertMeta('meta[name="description"]', {
+      name: "description",
+      content: description,
+    });
+
+    upsertMeta('meta[property="og:title"]', {
+      property: "og:title",
+      content: title,
+    });
+
+    upsertMeta('meta[property="og:description"]', {
+      property: "og:description",
+      content: description,
+    });
+
+    upsertMeta('meta[property="og:type"]', {
+      property: "og:type",
+      content: "website",
+    });
+
+    upsertMeta('meta[property="og:url"]', {
+      property: "og:url",
+      content: "https://racklogapp.com",
+    });
+
+    upsertMeta('meta[property="og:image"]', {
+      property: "og:image",
+      content: "https://racklogapp.com/racklog-logo2.png",
+    });
+
+    upsertMeta('meta[name="twitter:card"]', {
+      name: "twitter:card",
+      content: "summary_large_image",
+    });
+
+    upsertMeta('meta[name="twitter:title"]', {
+      name: "twitter:title",
+      content: title,
+    });
+
+    upsertMeta('meta[name="twitter:description"]', {
+      name: "twitter:description",
+      content: description,
+    });
+
+    upsertMeta('meta[name="twitter:image"]', {
+      name: "twitter:image",
+      content: "https://racklogapp.com/racklog-logo2.png",
+    });
+
+    upsertLink('link[rel="icon"]', {
+      rel: "icon",
+      href: "/racklog-logo2.png",
+      type: "image/png",
+    });
+
+    upsertLink('link[rel="apple-touch-icon"]', {
+      rel: "apple-touch-icon",
+      href: "/racklog-logo2.png",
+    });
+  }, []);
+}
+
 
 function SiteStyles() {
   return (
@@ -1355,10 +1455,51 @@ function SiteStyles() {
       }
 
       @media (max-width: 860px) {
-        .container { width: min(100% - 34px, 1260px); }
-        .hero { padding-top: 18px; }
-        .hero-video { opacity: .48; object-position: center; }
-        .nav-links { display: none; }
+        .container {
+          width: min(100% - 28px, 1260px);
+        }
+
+        .nav {
+          align-items: center;
+          gap: 14px;
+          margin-bottom: 46px;
+        }
+
+        .brand {
+          min-width: 0;
+          gap: 10px;
+        }
+
+        .racklog-brand-logo {
+          width: 44px;
+          height: 44px;
+          flex: 0 0 auto;
+        }
+
+        .logo-word {
+          font-size: 24px;
+          white-space: nowrap;
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .secondary-button {
+          min-height: 50px;
+          padding: 0 18px;
+          border-radius: 17px;
+          font-size: 13px;
+          white-space: nowrap;
+          flex: 0 0 auto;
+        }
+
+        .hero {
+          min-height: auto;
+          padding-top: 22px;
+          padding-bottom: 70px;
+          overflow: hidden;
+        }
 
         .hero-grid,
         .story-grid,
@@ -1374,15 +1515,69 @@ function SiteStyles() {
           order: initial;
         }
 
+        .hero-copy,
+        .hero-lead,
         .hero-title {
-          font-size: clamp(44px, 15vw, 72px);
-          letter-spacing: -1.5px;
+          max-width: 100%;
         }
 
-        .hero-lead { font-size: 23px; }
-        .phone-stage { min-height: 585px; }
-        .hero-phone-mini { right: 2%; bottom: 4%; }
-        .proof-grid { grid-template-columns: 1fr; }
+        .hero-title {
+          font-size: clamp(43px, 14.2vw, 72px);
+          line-height: .92;
+          letter-spacing: -1.5px;
+          overflow-wrap: anywhere;
+          word-break: normal;
+        }
+
+        .hero-title span {
+          display: block;
+          max-width: 100%;
+        }
+
+        .hero-lead {
+          font-size: 22px;
+          line-height: 1.18;
+        }
+
+        .hero-copy {
+          font-size: 16px;
+          line-height: 1.62;
+        }
+
+        .tag-row {
+          gap: 10px;
+        }
+
+        .tag {
+          font-size: 11px;
+          padding: 9px 11px;
+        }
+
+        .phone-stage {
+          min-height: auto;
+          padding-top: 18px;
+          place-items: center;
+          overflow: hidden;
+        }
+
+        .hero-phone-main {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+        }
+
+        .hero-phone-main .device {
+          width: min(88vw, 420px);
+          max-width: 100%;
+        }
+
+        .hero-phone-mini {
+          display: none;
+        }
+
+        .proof-grid {
+          grid-template-columns: 1fr;
+        }
 
         .features,
         .story,
@@ -1407,10 +1602,18 @@ function SiteStyles() {
           max-width: 100%;
         }
 
-        .lift { margin-top: -14px; }
+        .lift {
+          margin-top: -14px;
+        }
       }
 
       @media (max-width: 520px) {
+        .hero-title {
+          font-size: clamp(40px, 13.5vw, 58px);
+          line-height: .93;
+          letter-spacing: -1.15px;
+        }
+
         .hero-actions { display: grid; }
         .primary-button, .secondary-button { width: 100%; }
 
