@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import huntmaps from "./assets/screenshots/huntmaps.PNG";
 import heroVideo from "./assets/video/hero.mp4";
 import windtool from "./assets/screenshots/windtool.PNG";
@@ -561,14 +561,13 @@ function SiteStyles() {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-width: 38px;
-        width: 38px;
-        height: 38px;
+        min-width: 36px;
+        height: 36px;
         border-radius: 999px;
         border: 1px solid rgba(245,214,141,.32);
         color: #fff;
         text-decoration: none;
-        font-size: 19px;
+        font-size: 11px;
         font-weight: 1000;
         letter-spacing: 1px;
         background: rgba(255,255,255,.04);
@@ -1418,6 +1417,64 @@ function SiteStyles() {
         backdrop-filter: blur(10px);
       }
 
+
+      .kit-waitlist-slot {
+        margin: 34px auto 0;
+        width: min(100%, 680px);
+      }
+
+      .kit-waitlist-slot .formkit-form {
+        max-width: 680px !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        background: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+      }
+
+      .kit-waitlist-slot .formkit-fields {
+        display: flex !important;
+        gap: 12px !important;
+        align-items: stretch !important;
+      }
+
+      .kit-waitlist-slot .formkit-input {
+        min-height: 56px !important;
+        border-radius: 18px !important;
+        border: 1px solid rgba(245,214,141,.32) !important;
+        background: rgba(255,255,255,.06) !important;
+        color: #fff !important;
+        font-size: 16px !important;
+        padding: 0 18px !important;
+      }
+
+      .kit-waitlist-slot .formkit-input::placeholder {
+        color: rgba(255,255,255,.58) !important;
+      }
+
+      .kit-waitlist-slot .formkit-submit {
+        min-height: 56px !important;
+        border-radius: 18px !important;
+        border: 0 !important;
+        background: ${GOLD} !important;
+        color: #050505 !important;
+        font-weight: 1000 !important;
+        letter-spacing: 1px !important;
+        padding: 0 24px !important;
+        box-shadow: 0 0 38px rgba(212,160,23,.34) !important;
+      }
+
+      .kit-waitlist-slot .formkit-submit span {
+        background: transparent !important;
+        color: #050505 !important;
+      }
+
+      .kit-waitlist-slot .formkit-powered-by-convertkit-container,
+      .kit-waitlist-slot .formkit-powered-by {
+        color: rgba(255,255,255,.44) !important;
+      }
+
       .waitlist-title {
         margin: 18px 0;
         font-size: clamp(48px, 7vw, 88px);
@@ -1710,65 +1767,28 @@ function SiteStyles() {
         .container {
           width: min(100% - 24px, 1260px);
         }
-
         .nav {
-          justify-content: space-between;
-          align-items: center;
-          gap: 14px;
-          padding: 8px 0 8px;
-          margin-bottom: 24px;
-        }
-
-        .brand {
-          gap: 10px;
-          min-width: 0;
-          flex: 1 1 auto;
-        }
-
-        .racklog-brand-logo {
-          width: 46px;
-          height: 46px;
-          flex: 0 0 auto;
-        }
-
-        .logo-word {
-          font-size: 24px;
-          white-space: nowrap;
-          letter-spacing: .7px;
-        }
-
-        .nav > .secondary-button {
-          display: none;
-        }
-
-        .nav-links {
-          display: flex;
-          align-items: center;
-          justify-content: flex-end;
-          gap: 10px;
-          margin-left: auto;
-          flex: 0 0 auto;
-        }
-
-        .nav-link {
-          display: none;
-        }
-
-        .nav-social {
-          width: 44px;
-          height: 44px;
-          min-width: 44px;
-          border-radius: 999px;
-          font-size: 23px;
-          color: ${GOLD_LIGHT};
-          border-color: rgba(245,214,141,.42);
-          background: rgba(0,0,0,.42);
-          box-shadow: 0 0 22px rgba(212,160,23,.16);
+          gap: 18px;
+          padding: 10px 0 22px;
         }
 
         .hero {
-          padding-top: 12px;
-          padding-bottom: 64px;
+          padding-top: 18px;
+        }
+
+        .logo-word {
+          font-size: 18px;
+        }
+
+        .racklog-brand-logo {
+          width: 34px;
+          height: 34px;
+        }
+
+        .nav > .secondary-button {
+          min-height: 42px;
+          padding: 0 18px;
+          font-size: 11px;
         }
 
         .kicker {
@@ -1780,7 +1800,6 @@ function SiteStyles() {
           font-size: clamp(36px, 10.7vw, 47px);
           line-height: .98;
           letter-spacing: -.75px;
-          margin-top: 22px;
         }
 
         .hero-lead {
@@ -1829,6 +1848,23 @@ function SiteStyles() {
           font-size: clamp(36px, 11vw, 54px);
         }
 
+
+        .kit-waitlist-slot {
+          width: 100%;
+          margin-top: 28px;
+        }
+
+        .kit-waitlist-slot .formkit-fields {
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          gap: 12px !important;
+        }
+
+        .kit-waitlist-slot .formkit-submit,
+        .kit-waitlist-slot .formkit-input {
+          width: 100% !important;
+        }
+
         .manifesto-title,
         .waitlist-title {
           font-size: clamp(42px, 12vw, 62px);
@@ -1865,7 +1901,6 @@ function Hero() {
 
             <a
               className="nav-social"
-              aria-label="RackLog Instagram"
               href="https://instagram.com/racklogapp"
               target="_blank"
               rel="noreferrer"
@@ -1875,7 +1910,6 @@ function Hero() {
 
             <a
               className="nav-social"
-              aria-label="RackLog TikTok"
               href="https://tiktok.com/@racklogapp"
               target="_blank"
               rel="noreferrer"
@@ -2272,6 +2306,31 @@ function FutureManifesto() {
   );
 }
 
+
+function KitWaitlistForm() {
+  const slotRef = useRef(null);
+
+  useEffect(() => {
+    const slot = slotRef.current;
+    if (!slot) return undefined;
+
+    slot.innerHTML = "";
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.dataset.uid = "71e57646fa";
+    script.src = "https://racklog.kit.com/71e57646fa/index.js";
+
+    slot.appendChild(script);
+
+    return () => {
+      slot.innerHTML = "";
+    };
+  }, []);
+
+  return <div ref={slotRef} className="kit-waitlist-slot" />;
+}
+
 function LaunchCTA() {
   return (
     <section id="waitlist" className="waitlist">
@@ -2305,12 +2364,10 @@ function LaunchCTA() {
           </div>
 
           <div style={{ marginTop: 34 }}>
-           <script
-             async
-             data-uid="71e57646fa"
-             src="https://racklog.kit.com/71e57646fa/index.js"
-           ></script>
-         </div>
+            <a className="primary-button" href="mailto:hello@racklogapp.com?subject=RackLog Beta Waitlist">
+              REQUEST BETA ACCESS
+            </a>
+          </div>
         </div>
       </div>
     </section>
