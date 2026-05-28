@@ -18,6 +18,7 @@ import bucktracker4 from "./assets/screenshots/bucktracker4.jpeg";
 import { FaInstagram, FaTiktok } from "react-icons/fa";
 
 const racklogLogo = "/racklog-logo2.png";
+
 const GOLD = "#D4A017";
 const GOLD_LIGHT = "#F5D68D";
 const PANEL = "rgba(6,6,6,.82)";
@@ -200,7 +201,7 @@ function useRackLogHead() {
   useEffect(() => {
     const title = "RackLog | Whitetail Hunting Intelligence";
     const description =
-      "RackLog brings HuntMaps, wind and thermal tools, Buck Brain prediction modeling, Rack Intel, verified leaderboards, trophy cards, hunt logs, and target buck history into one premium whitetail platform.";
+      "Pattern your target buck. Pick the right stand. Hunt with a plan.";
 
     document.title = title;
 
@@ -230,7 +231,13 @@ function useRackLogHead() {
 
     upsertMeta('meta[name="description"]', {
       name: "description",
-      content: description,
+      content:
+        "RackLog brings HuntMaps, wind and thermal tools, Buck Brain prediction modeling, Rack Intel, verified leaderboards, trophy cards, hunt logs, and target buck history into one premium whitetail platform.",
+    });
+
+    upsertMeta('meta[property="og:site_name"]', {
+      property: "og:site_name",
+      content: "RackLog",
     });
 
     upsertMeta('meta[property="og:title"]', {
@@ -256,6 +263,26 @@ function useRackLogHead() {
     upsertMeta('meta[property="og:image"]', {
       property: "og:image",
       content: "https://racklogapp.com/racklog-logo2.png",
+    });
+
+    upsertMeta('meta[property="og:image:secure_url"]', {
+      property: "og:image:secure_url",
+      content: "https://racklogapp.com/racklog-logo2.png",
+    });
+
+    upsertMeta('meta[property="og:image:type"]', {
+      property: "og:image:type",
+      content: "image/png",
+    });
+
+    upsertMeta('meta[property="og:image:width"]', {
+      property: "og:image:width",
+      content: "1254",
+    });
+
+    upsertMeta('meta[property="og:image:height"]', {
+      property: "og:image:height",
+      content: "1254",
     });
 
     upsertMeta('meta[name="twitter:card"]', {
@@ -725,7 +752,7 @@ function SiteStyles() {
       .hero-phone-main {
         position: relative;
         z-index: 2;
-        animation: floatMain 7s ease-in-out infinite;
+        animation: none;
       }
 
       .hero-phone-mini {
@@ -736,7 +763,7 @@ function SiteStyles() {
         width: 44%;
         min-width: 170px;
         max-width: 260px;
-        animation: floatMini 6.5s ease-in-out infinite;
+        animation: none;
       }
 
       @keyframes floatMain {
@@ -762,15 +789,15 @@ function SiteStyles() {
           0 0 58px rgba(212,160,23,.18),
           0 32px 92px rgba(0,0,0,.82);
         transition: transform .3s ease, box-shadow .3s ease;
-        animation: phoneFloat 7.5s ease-in-out infinite;
+        animation: none;
       }
 
       .device:nth-child(2n) {
-        animation-delay: -2.4s;
+        animation-delay: 0s;
       }
 
       .device:nth-child(3n) {
-        animation-delay: -4.1s;
+        animation-delay: 0s;
       }
 
       @keyframes phoneFloat {
@@ -1455,29 +1482,67 @@ function SiteStyles() {
       }
 
       @media (max-width: 860px) {
+        html {
+          scroll-behavior: auto;
+        }
+
+        .site-bg-video {
+          display: none;
+        }
+
+        .gold-atmosphere {
+          animation: none;
+          opacity: .46;
+        }
+
+        .features,
+        .story,
+        .signal-section,
+        .hype-section,
+        .wall-section,
+        .edge-section,
+        .manifesto,
+        .waitlist,
+        .proof,
+        .ribbon,
+        .story-copy,
+        .signal-grid > div:first-child,
+        .device-cluster,
+        .signal-card,
+        .giant-wall,
+        .hero-phone-main,
+        .hero-phone-mini,
+        .device,
+        .gold-orb {
+          animation: none !important;
+          animation-timeline: auto !important;
+          transform: none !important;
+          will-change: auto !important;
+        }
+
         .container {
           width: min(100% - 28px, 1260px);
         }
 
         .nav {
           align-items: center;
-          gap: 14px;
-          margin-bottom: 46px;
+          gap: 12px;
+          margin-bottom: 44px;
         }
 
         .brand {
           min-width: 0;
-          gap: 10px;
+          gap: 9px;
         }
 
         .racklog-brand-logo {
-          width: 44px;
-          height: 44px;
+          width: 42px;
+          height: 42px;
           flex: 0 0 auto;
         }
 
         .logo-word {
-          font-size: 24px;
+          font-size: 23px;
           white-space: nowrap;
         }
 
@@ -1485,9 +1550,9 @@ function SiteStyles() {
           display: none;
         }
 
-        .secondary-button {
-          min-height: 50px;
-          padding: 0 18px;
+        .nav > .secondary-button {
+          min-height: 48px;
+          padding: 0 17px;
           border-radius: 17px;
           font-size: 13px;
           white-space: nowrap;
@@ -1496,9 +1561,26 @@ function SiteStyles() {
 
         .hero {
           min-height: auto;
-          padding-top: 22px;
-          padding-bottom: 70px;
+          padding-top: 20px;
+          padding-bottom: 72px;
           overflow: hidden;
+          background:
+            radial-gradient(circle at 72% 22%, rgba(212,160,23,.18), transparent 28%),
+            linear-gradient(90deg, rgba(0,0,0,.94) 0%, rgba(0,0,0,.78) 50%, rgba(0,0,0,.88) 100%),
+            #050505;
+        }
+
+        .hero::before {
+          background:
+            linear-gradient(90deg, rgba(0,0,0,.88) 0%, rgba(0,0,0,.60) 50%, rgba(0,0,0,.80) 100%),
+            linear-gradient(180deg, rgba(0,0,0,.52), rgba(0,0,0,.34), rgba(0,0,0,.92)),
+            radial-gradient(circle at 78% 30%, rgba(212,160,23,.19), transparent 28%),
+            radial-gradient(circle at 18% 78%, rgba(212,160,23,.13), transparent 34%);
+        }
+
+        .hero::after {
+          opacity: .08;
+          background-size: 48px 48px;
         }
 
         .hero-grid,
@@ -1506,8 +1588,9 @@ function SiteStyles() {
         .story-grid.reverse,
         .signal-grid,
         .giant-wall {
-          grid-template-columns: 1fr;
-          gap: 38px;
+          display: grid;
+          grid-template-columns: minmax(0, 1fr);
+          gap: 36px;
         }
 
         .story-grid.reverse .story-copy,
@@ -1518,25 +1601,29 @@ function SiteStyles() {
         .hero-copy,
         .hero-lead,
         .hero-title {
+          width: 100%;
           max-width: 100%;
         }
 
         .hero-title {
-          font-size: clamp(43px, 14.2vw, 72px);
-          line-height: .92;
-          letter-spacing: -1.5px;
-          overflow-wrap: anywhere;
+          font-size: clamp(38px, 11.8vw, 58px);
+          line-height: .955;
+          letter-spacing: -1.05px;
+          overflow-wrap: normal;
           word-break: normal;
         }
 
         .hero-title span {
           display: block;
           max-width: 100%;
+          overflow-wrap: normal;
+          word-break: normal;
         }
 
         .hero-lead {
           font-size: 22px;
           line-height: 1.18;
+          max-width: 96%;
         }
 
         .hero-copy {
@@ -1553,11 +1640,21 @@ function SiteStyles() {
           padding: 9px 11px;
         }
 
+        .hero-actions {
+          margin-top: 28px;
+        }
+
         .phone-stage {
           min-height: auto;
-          padding-top: 18px;
+          padding-top: 14px;
           place-items: center;
           overflow: hidden;
+        }
+
+        .gold-orb {
+          width: 340px;
+          height: 340px;
+          filter: blur(70px);
         }
 
         .hero-phone-main {
@@ -1566,8 +1663,9 @@ function SiteStyles() {
           justify-content: center;
         }
 
-        .hero-phone-main .device {
-          width: min(88vw, 420px);
+        .hero-phone-main .device,
+        .device.hero-device {
+          width: min(88vw, 390px);
           max-width: 100%;
         }
 
@@ -1608,14 +1706,58 @@ function SiteStyles() {
       }
 
       @media (max-width: 520px) {
-        .hero-title {
-          font-size: clamp(40px, 13.5vw, 58px);
-          line-height: .93;
-          letter-spacing: -1.15px;
+        .container {
+          width: min(100% - 24px, 1260px);
         }
 
-        .hero-actions { display: grid; }
-        .primary-button, .secondary-button { width: 100%; }
+        .hero {
+          padding-top: 18px;
+        }
+
+        .logo-word {
+          font-size: 21px;
+        }
+
+        .racklog-brand-logo {
+          width: 40px;
+          height: 40px;
+        }
+
+        .nav > .secondary-button {
+          min-height: 46px;
+          padding: 0 15px;
+          font-size: 12px;
+        }
+
+        .kicker {
+          font-size: 12px;
+          padding: 9px 13px;
+        }
+
+        .hero-title {
+          font-size: clamp(36px, 10.7vw, 47px);
+          line-height: .98;
+          letter-spacing: -.75px;
+        }
+
+        .hero-lead {
+          font-size: 20px;
+          line-height: 1.22;
+        }
+
+        .hero-copy {
+          font-size: 15.5px;
+          line-height: 1.62;
+        }
+
+        .hero-actions {
+          display: grid;
+        }
+
+        .primary-button,
+        .secondary-button {
+          width: 100%;
+        }
 
         .device-cluster,
         .device-cluster.feature-large,
@@ -1623,10 +1765,31 @@ function SiteStyles() {
           grid-template-columns: 1fr;
         }
 
-        .lift { margin-top: 0; }
-        .hero-phone-mini { display: none; }
-        .phone-stage { min-height: auto; padding-top: 18px; }
-        .signal-metrics { grid-template-columns: 1fr; }
+        .lift {
+          margin-top: 0;
+        }
+
+        .hero-phone-mini {
+          display: none;
+        }
+
+        .phone-stage {
+          min-height: auto;
+          padding-top: 12px;
+        }
+
+        .signal-metrics {
+          grid-template-columns: 1fr;
+        }
+
+        .section-title {
+          font-size: clamp(36px, 11vw, 54px);
+        }
+
+        .manifesto-title,
+        .waitlist-title {
+          font-size: clamp(42px, 12vw, 62px);
+        }
       }
     `}</style>
   );
