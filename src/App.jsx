@@ -305,6 +305,12 @@ function useRackLogHead() {
       content: "https://racklogapp.com/racklog-logo2.png",
     });
 
+
+    upsertMeta('meta[name="google-site-verification"]', {
+      name: "google-site-verification",
+      content: "lq3HowWS_l3IdzjHwnLIR58-4bOG_EA3f6fZWK3flcs",
+    });
+
     upsertLink('link[rel="icon"]', {
       rel: "icon",
       href: "/racklog-logo2.png",
