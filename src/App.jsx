@@ -1709,24 +1709,28 @@ function SiteStyles() {
         .container {
           width: min(100% - 24px, 1260px);
         }
+        .nav {
+          gap: 18px;
+          padding: 10px 0 22px;
+        }
 
         .hero {
           padding-top: 18px;
         }
 
         .logo-word {
-          font-size: 21px;
+          font-size: 18px;
         }
 
         .racklog-brand-logo {
-          width: 40px;
-          height: 40px;
+          width: 34px;
+          height: 34px;
         }
 
         .nav > .secondary-button {
-          min-height: 46px;
-          padding: 0 15px;
-          font-size: 12px;
+          min-height: 42px;
+          padding: 0 18px;
+          font-size: 11px;
         }
 
         .kicker {
