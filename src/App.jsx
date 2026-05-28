@@ -315,6 +315,29 @@ function useRackLogHead() {
       rel: "apple-touch-icon",
       href: "/racklog-logo2.png",
     });
+
+    const GA_MEASUREMENT_ID = "G-BKY32901SW";
+    const existingGA = document.querySelector(
+      `script[src*="googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}"]`
+    );
+
+    if (!existingGA) {
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+      document.head.appendChild(script);
+
+      window.dataLayer = window.dataLayer || [];
+
+      window.gtag =
+        window.gtag ||
+        function gtag() {
+          window.dataLayer.push(arguments);
+        };
+
+      window.gtag("js", new Date());
+      window.gtag("config", GA_MEASUREMENT_ID);
+    }
   }, []);
 }
 
