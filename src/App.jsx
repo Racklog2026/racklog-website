@@ -561,13 +561,14 @@ function SiteStyles() {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-width: 36px;
-        height: 36px;
+        min-width: 38px;
+        width: 38px;
+        height: 38px;
         border-radius: 999px;
         border: 1px solid rgba(245,214,141,.32);
         color: #fff;
         text-decoration: none;
-        font-size: 11px;
+        font-size: 19px;
         font-weight: 1000;
         letter-spacing: 1px;
         background: rgba(255,255,255,.04);
@@ -1767,28 +1768,65 @@ function SiteStyles() {
         .container {
           width: min(100% - 24px, 1260px);
         }
+
         .nav {
-          gap: 18px;
-          padding: 10px 0 22px;
+          justify-content: space-between;
+          align-items: center;
+          gap: 14px;
+          padding: 8px 0 8px;
+          margin-bottom: 24px;
         }
 
-        .hero {
-          padding-top: 18px;
-        }
-
-        .logo-word {
-          font-size: 18px;
+        .brand {
+          gap: 10px;
+          min-width: 0;
+          flex: 1 1 auto;
         }
 
         .racklog-brand-logo {
-          width: 34px;
-          height: 34px;
+          width: 46px;
+          height: 46px;
+          flex: 0 0 auto;
+        }
+
+        .logo-word {
+          font-size: 24px;
+          white-space: nowrap;
+          letter-spacing: .7px;
         }
 
         .nav > .secondary-button {
-          min-height: 42px;
-          padding: 0 18px;
-          font-size: 11px;
+          display: none;
+        }
+
+        .nav-links {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 10px;
+          margin-left: auto;
+          flex: 0 0 auto;
+        }
+
+        .nav-link {
+          display: none;
+        }
+
+        .nav-social {
+          width: 44px;
+          height: 44px;
+          min-width: 44px;
+          border-radius: 999px;
+          font-size: 23px;
+          color: ${GOLD_LIGHT};
+          border-color: rgba(245,214,141,.42);
+          background: rgba(0,0,0,.42);
+          box-shadow: 0 0 22px rgba(212,160,23,.16);
+        }
+
+        .hero {
+          padding-top: 12px;
+          padding-bottom: 64px;
         }
 
         .kicker {
@@ -1800,6 +1838,7 @@ function SiteStyles() {
           font-size: clamp(36px, 10.7vw, 47px);
           line-height: .98;
           letter-spacing: -.75px;
+          margin-top: 22px;
         }
 
         .hero-lead {
@@ -1848,10 +1887,9 @@ function SiteStyles() {
           font-size: clamp(36px, 11vw, 54px);
         }
 
-
         .kit-waitlist-slot {
           width: 100%;
-          margin-top: 28px;
+          margin-top: 34px;
         }
 
         .kit-waitlist-slot .formkit-fields {
@@ -1901,6 +1939,7 @@ function Hero() {
 
             <a
               className="nav-social"
+              aria-label="RackLog Instagram"
               href="https://instagram.com/racklogapp"
               target="_blank"
               rel="noreferrer"
@@ -1910,6 +1949,7 @@ function Hero() {
 
             <a
               className="nav-social"
+              aria-label="RackLog TikTok"
               href="https://tiktok.com/@racklogapp"
               target="_blank"
               rel="noreferrer"
@@ -2363,11 +2403,7 @@ function LaunchCTA() {
             </a>
           </div>
 
-          <div style={{ marginTop: 34 }}>
-            <a className="primary-button" href="mailto:hello@racklogapp.com?subject=RackLog Beta Waitlist">
-              REQUEST BETA ACCESS
-            </a>
-          </div>
+          <KitWaitlistForm />
         </div>
       </div>
     </section>
