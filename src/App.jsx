@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import huntmaps from "./assets/screenshots/huntmaps.PNG";
 import heroVideo from "./assets/video/hero.mp4";
-import racklogLogo from "./assets/images/racklog-logo2.png";
 import windtool from "./assets/screenshots/windtool.PNG";
 import rackintel from "./assets/screenshots/rackintel.PNG";
 import buckbrain1 from "./assets/screenshots/buckbrain1.PNG";
@@ -18,6 +17,7 @@ import bucktracker3 from "./assets/screenshots/bucktracker3.jpeg";
 import bucktracker4 from "./assets/screenshots/bucktracker4.jpeg";
 import { FaInstagram, FaTiktok } from "react-icons/fa";
 
+const racklogLogo = "/racklog-logo2.png";
 const GOLD = "#D4A017";
 const GOLD_LIGHT = "#F5D68D";
 const PANEL = "rgba(6,6,6,.82)";
