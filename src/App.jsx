@@ -326,18 +326,49 @@ function useRackLogHead() {
       script.async = true;
       script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
       document.head.appendChild(script);
+    }
 
-      window.dataLayer = window.dataLayer || [];
+    window.dataLayer = window.dataLayer || [];
 
-      window.gtag =
-        window.gtag ||
-        function gtag() {
-          window.dataLayer.push(arguments);
+    window.gtag =
+      window.gtag ||
+      function gtag() {
+        window.dataLayer.push(arguments);
+      };
+
+    window.gtag("js", new Date());
+    window.gtag("config", GA_MEASUREMENT_ID);
+
+    const META_PIXEL_ID = "278726835798662";
+    const existingMetaPixel = document.querySelector(
+      `script[data-racklog-meta-pixel="${META_PIXEL_ID}"]`
+    );
+
+    if (!existingMetaPixel) {
+      window.fbq =
+        window.fbq ||
+        function fbq() {
+          window.fbq.callMethod
+            ? window.fbq.callMethod.apply(window.fbq, arguments)
+            : window.fbq.queue.push(arguments);
         };
 
-      window.gtag("js", new Date());
-      window.gtag("config", GA_MEASUREMENT_ID);
+      if (!window._fbq) window._fbq = window.fbq;
+      window.fbq.push = window.fbq;
+      window.fbq.loaded = true;
+      window.fbq.version = "2.0";
+      window.fbq.queue = window.fbq.queue || [];
+
+      const script = document.createElement("script");
+      script.async = true;
+      script.dataset.racklogMetaPixel = META_PIXEL_ID;
+      script.src = "https://connect.facebook.net/en_US/fbevents.js";
+      document.head.appendChild(script);
+
+      window.fbq("init", META_PIXEL_ID);
     }
+
+    window.fbq && window.fbq("track", "PageView");
   }, []);
 }
 
