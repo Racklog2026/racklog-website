@@ -2305,10 +2305,12 @@ function LaunchCTA() {
           </div>
 
           <div style={{ marginTop: 34 }}>
-            <a className="primary-button" href="mailto:hello@racklogapp.com?subject=RackLog Beta Waitlist">
-              REQUEST BETA ACCESS
-            </a>
-          </div>
+           <script
+             async
+             data-uid="71e57646fa"
+             src="https://racklog.kit.com/71e57646fa/index.js"
+           ></script>
+         </div>
         </div>
       </div>
     </section>
