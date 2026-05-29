@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import huntmaps from "./assets/screenshots/huntmaps.PNG";
 import heroVideo from "./assets/video/hero.mp4";
 import windtool from "./assets/screenshots/windtool.PNG";
@@ -23,6 +23,179 @@ const GOLD = "#D4A017";
 const GOLD_LIGHT = "#F5D68D";
 const PANEL = "rgba(6,6,6,.82)";
 const GOLD_LINE = "rgba(212,160,23,.36)";
+
+const RACKLOG_UTM_STORAGE_KEY = "racklog_utm_context";
+const RACKLOG_DEVICE_STORAGE_KEY = "racklog_preferred_device";
+
+const UTM_KEYS = [
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "utm_term",
+];
+
+function safeLocalStorageGet(key) {
+  if (typeof window === "undefined") return null;
+
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function safeLocalStorageSet(key, value) {
+  if (typeof window === "undefined") return;
+
+  try {
+    window.localStorage.setItem(key, value);
+  } catch {
+    // Ignore blocked storage.
+  }
+}
+
+function getStoredUtmContext() {
+  const raw = safeLocalStorageGet(RACKLOG_UTM_STORAGE_KEY);
+  if (!raw) return {};
+
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function normalizeDeviceValue(value) {
+  if (!value) return "";
+  const normalized = String(value).trim().toLowerCase();
+
+  if (normalized.includes("iphone") || normalized.includes("ios")) return "iPhone";
+  if (normalized.includes("android")) return "Android";
+
+  return "";
+}
+
+function getCurrentAttributionContext() {
+  if (typeof window === "undefined") return {};
+
+  const params = new URLSearchParams(window.location.search);
+  const stored = getStoredUtmContext();
+  const next = {
+    ...stored,
+  };
+
+  let foundNewUtm = false;
+
+  UTM_KEYS.forEach((key) => {
+    const value = params.get(key);
+    if (value) {
+      next[key] = value;
+      foundNewUtm = true;
+    }
+  });
+
+  const referrer = document.referrer || stored.referrer || "";
+  if (referrer) next.referrer = referrer;
+
+  next.landing_page = stored.landing_page || window.location.href;
+  next.last_page = window.location.href;
+  next.updated_at = new Date().toISOString();
+
+  if (foundNewUtm || Object.keys(next).length) {
+    safeLocalStorageSet(RACKLOG_UTM_STORAGE_KEY, JSON.stringify(next));
+  }
+
+  return next;
+}
+
+function setOrCreateInput(form, name, value) {
+  if (!form || !name || value === undefined || value === null || value === "") return;
+
+  const escaped = typeof CSS !== "undefined" && CSS.escape ? CSS.escape(name) : name;
+  let input = form.querySelector(`input[name="${escaped}"]`);
+
+  if (!input) {
+    input = document.createElement("input");
+    input.type = "hidden";
+    input.name = name;
+    form.appendChild(input);
+  }
+
+  input.value = value;
+}
+
+function pushAttributionToKitForm(form, deviceValue) {
+  if (!form) return;
+
+  const context = getCurrentAttributionContext();
+  const device = normalizeDeviceValue(deviceValue || safeLocalStorageGet(RACKLOG_DEVICE_STORAGE_KEY));
+
+  if (device) {
+    [
+      "fields[device]",
+      "fields[Device]",
+      "fields[preferred_device]",
+      "fields[Preferred Device]",
+      "device",
+      "Device",
+      "preferred_device",
+      "Preferred Device",
+    ].forEach((name) => setOrCreateInput(form, name, device));
+
+    const visibleDeviceInput = Array.from(form.querySelectorAll("input, select")).find((input) => {
+      const label = `${input.name || ""} ${input.id || ""} ${input.placeholder || ""}`.toLowerCase();
+      return label.includes("device") && input.type !== "hidden";
+    });
+
+    if (visibleDeviceInput) {
+      visibleDeviceInput.value = device;
+      visibleDeviceInput.dispatchEvent(new Event("input", { bubbles: true }));
+      visibleDeviceInput.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+  }
+
+  Object.entries(context).forEach(([key, value]) => {
+    if (!value) return;
+
+    [
+      key,
+      `fields[${key}]`,
+      `fields[${key.replaceAll("_", " ")}]`,
+    ].forEach((name) => setOrCreateInput(form, name, value));
+  });
+}
+
+function useRackLogAttribution() {
+  useEffect(() => {
+    getCurrentAttributionContext();
+  }, []);
+}
+
+function trackWaitlistIntent(device) {
+  if (typeof window === "undefined") return;
+
+  const context = getCurrentAttributionContext();
+
+  window.gtag &&
+    window.gtag("event", "waitlist_submit", {
+      event_category: "beta_waitlist",
+      event_label: device || "unknown_device",
+      preferred_device: device || "unknown",
+      utm_source: context.utm_source || "",
+      utm_medium: context.utm_medium || "",
+      utm_campaign: context.utm_campaign || "",
+      utm_content: context.utm_content || "",
+    });
+
+  window.fbq &&
+    window.fbq("track", "Lead", {
+      content_name: "RackLog Beta Waitlist",
+      preferred_device: device || "unknown",
+    });
+}
+
 
 const features = [
   {
@@ -170,6 +343,7 @@ const story = [
 
 export default function App() {
   useRackLogHead();
+  useRackLogAttribution();
 
   return (
     <main className="racklog-page">
@@ -303,12 +477,6 @@ function useRackLogHead() {
     upsertMeta('meta[name="twitter:image"]', {
       name: "twitter:image",
       content: "https://racklogapp.com/racklog-logo2.png",
-    });
-
-
-    upsertMeta('meta[name="google-site-verification"]', {
-      name: "google-site-verification",
-      content: "lq3HowWS_l3IdzjHwnLIR58-4bOG_EA3f6fZWK3flcs",
     });
 
     upsertLink('link[rel="icon"]', {
@@ -1479,6 +1647,58 @@ function SiteStyles() {
       }
 
 
+
+      .racklog-beta-intake {
+        width: min(100%, 680px);
+        margin: 34px auto 0;
+      }
+
+      .device-question {
+        margin: 0 0 14px;
+        color: rgba(255,255,255,.72);
+        font-size: 13px;
+        font-weight: 1000;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+      }
+
+      .device-selector {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .device-option {
+        min-height: 52px;
+        border-radius: 18px;
+        border: 1px solid rgba(245,214,141,.28);
+        background:
+          linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.035)),
+          rgba(0,0,0,.36);
+        color: rgba(255,255,255,.78);
+        font-weight: 1000;
+        letter-spacing: .8px;
+        cursor: pointer;
+        transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease, color .2s ease;
+      }
+
+      .device-option:hover,
+      .device-option.active {
+        transform: translateY(-2px);
+        color: #050505;
+        border-color: rgba(245,214,141,.78);
+        background: ${GOLD};
+        box-shadow: 0 0 34px rgba(212,160,23,.28);
+      }
+
+      .device-helper {
+        margin: 0 0 16px;
+        color: rgba(255,255,255,.56);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
       .kit-waitlist-slot {
         margin: 34px auto 0;
         width: min(100%, 680px);
@@ -1947,7 +2167,59 @@ function SiteStyles() {
           font-size: clamp(36px, 11vw, 54px);
         }
 
-        .kit-waitlist-slot {
+  
+      .racklog-beta-intake {
+        width: min(100%, 680px);
+        margin: 34px auto 0;
+      }
+
+      .device-question {
+        margin: 0 0 14px;
+        color: rgba(255,255,255,.72);
+        font-size: 13px;
+        font-weight: 1000;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+      }
+
+      .device-selector {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .device-option {
+        min-height: 52px;
+        border-radius: 18px;
+        border: 1px solid rgba(245,214,141,.28);
+        background:
+          linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.035)),
+          rgba(0,0,0,.36);
+        color: rgba(255,255,255,.78);
+        font-weight: 1000;
+        letter-spacing: .8px;
+        cursor: pointer;
+        transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease, color .2s ease;
+      }
+
+      .device-option:hover,
+      .device-option.active {
+        transform: translateY(-2px);
+        color: #050505;
+        border-color: rgba(245,214,141,.78);
+        background: ${GOLD};
+        box-shadow: 0 0 34px rgba(212,160,23,.28);
+      }
+
+      .device-helper {
+        margin: 0 0 16px;
+        color: rgba(255,255,255,.56);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .kit-waitlist-slot {
           width: 100%;
           margin-top: 34px;
         }
@@ -2409,6 +2681,28 @@ function FutureManifesto() {
 
 function KitWaitlistForm() {
   const slotRef = useRef(null);
+  const [preferredDevice, setPreferredDevice] = useState(() =>
+    normalizeDeviceValue(safeLocalStorageGet(RACKLOG_DEVICE_STORAGE_KEY))
+  );
+  const preferredDeviceRef = useRef(preferredDevice);
+
+  const attributionContext = useMemo(() => getStoredUtmContext(), []);
+
+  useEffect(() => {
+    const normalized = normalizeDeviceValue(preferredDevice);
+    preferredDeviceRef.current = normalized;
+
+    if (normalized) {
+      safeLocalStorageSet(RACKLOG_DEVICE_STORAGE_KEY, normalized);
+    }
+
+    const slot = slotRef.current;
+    if (!slot) return;
+
+    slot.querySelectorAll("form").forEach((form) => {
+      pushAttributionToKitForm(form, normalized);
+    });
+  }, [preferredDevice]);
 
   useEffect(() => {
     const slot = slotRef.current;
@@ -2423,12 +2717,80 @@ function KitWaitlistForm() {
 
     slot.appendChild(script);
 
+    const attachEnhancements = () => {
+      const forms = slot.querySelectorAll("form");
+      forms.forEach((form) => {
+        const currentDevice = normalizeDeviceValue(preferredDeviceRef.current);
+
+        if (form.dataset.racklogEnhanced === "true") {
+          pushAttributionToKitForm(form, currentDevice);
+          return;
+        }
+
+        form.dataset.racklogEnhanced = "true";
+        pushAttributionToKitForm(form, currentDevice);
+
+        form.addEventListener(
+          "submit",
+          () => {
+            const device = normalizeDeviceValue(preferredDeviceRef.current);
+            pushAttributionToKitForm(form, device);
+            trackWaitlistIntent(device);
+          },
+          true
+        );
+      });
+    };
+
+    const observer = new MutationObserver(attachEnhancements);
+    observer.observe(slot, { childList: true, subtree: true });
+
+    const interval = window.setInterval(attachEnhancements, 350);
+    attachEnhancements();
+
     return () => {
+      observer.disconnect();
+      window.clearInterval(interval);
       slot.innerHTML = "";
     };
   }, []);
 
-  return <div ref={slotRef} className="kit-waitlist-slot" />;
+  const selectDevice = (device) => {
+    setPreferredDevice(device);
+    safeLocalStorageSet(RACKLOG_DEVICE_STORAGE_KEY, device);
+  };
+
+  return (
+    <div className="racklog-beta-intake">
+      <div className="device-question">Beta device preference</div>
+
+      <div className="device-selector" role="group" aria-label="Preferred beta device">
+        <button
+          type="button"
+          className={`device-option ${preferredDevice === "iPhone" ? "active" : ""}`}
+          onClick={() => selectDevice("iPhone")}
+          aria-pressed={preferredDevice === "iPhone"}
+        >
+          📱 iPhone
+        </button>
+
+        <button
+          type="button"
+          className={`device-option ${preferredDevice === "Android" ? "active" : ""}`}
+          onClick={() => selectDevice("Android")}
+          aria-pressed={preferredDevice === "Android"}
+        >
+          🤖 Android
+        </button>
+      </div>
+
+      <p className="device-helper">
+        Choose your beta device so we can send the right invite when access opens.
+      </p>
+
+      <div ref={slotRef} className="kit-waitlist-slot" data-utm-campaign={attributionContext.utm_campaign || ""} />
+    </div>
+  );
 }
 
 function LaunchCTA() {
